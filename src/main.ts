@@ -8,6 +8,8 @@ Vue.config.productionTip = false;
 
 Vue.use(utils)
 
+import '@vant/touch-emulator';
+
 // import VConsole from 'vconsole'
 // const vConsole = new VConsole()
 
