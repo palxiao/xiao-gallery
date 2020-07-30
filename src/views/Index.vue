@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(imgs, date, key) in imgList" :key="key">
-      <div>{{date}}</div>
+      <van-divider content-position="left">{{date}}</van-divider>
       <div class="box-wrapper">
         <img @click="preview(date, index)" v-for="(img, index) in imgs" :key="index" v-lazy="img.url+short" class="box spe" />
       </div>
@@ -19,8 +19,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import VueBase from '@/vueBase'
-import { ImagePreview } from 'vant'
-import { Lazyload } from 'vant'
+import { Lazyload, ImagePreview, Divider } from 'vant'
 Vue.use(Lazyload, {
   // loading: './favicon.ico',
 })
@@ -28,6 +27,7 @@ Vue.use(Lazyload, {
 @Component({
   components: {
     [ImagePreview.Component.name]: ImagePreview.Component,
+    [Divider.name]: Divider,
   },
 })
 export default class Index extends VueBase {
