@@ -72,7 +72,8 @@ export default class Index extends VueBase {
 
     const EXIF = (window as any).EXIF
     const img = new Image()
-    img.src = this.images[index]
+    // img.src = this.images[index]
+    img.src = 'http://fp-img.palxp.com/2018-01-27%20182723.jpg-tiny'
     img.crossOrigin = 'anonymous'
     img.onload = () => {
       EXIF.getData(img, function(this: any) {
