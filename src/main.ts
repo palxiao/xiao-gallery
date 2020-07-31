@@ -19,5 +19,6 @@ new Vue({
   render: (h) => h(App),
 }).$mount('#app');
 
+
 import './assets/styles/index.less';
 import 'normalize.css/normalize.css';

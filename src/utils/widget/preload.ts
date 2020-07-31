@@ -5,12 +5,13 @@ export default class PreLoad {
         this.i = 0
         this.arr = arr
     }
-    public imgs() {
+    public imgs(cb: Function) {
         return new Promise(resolve => {
             const work = (src: string) => {
                 if (this.i < this.arr.length) {
                     const img = new Image()
                     img.src = src;
+                    cb(((this.i + 1) / this.arr.length) * 100)   // 进度反馈            
                     if (img.complete) {
                         work(this.arr[this.i++])
                     } else {
@@ -19,7 +20,6 @@ export default class PreLoad {
                             img.onload = null;
                         };
                     }
-                    // console.log(((this.i + 1) / this.arr.length) * 100);
                 } else {
                     resolve()
                 }
