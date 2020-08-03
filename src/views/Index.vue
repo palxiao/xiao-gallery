@@ -7,16 +7,20 @@
         <van-divider content-position="left">{{date}}</van-divider>
         <div class="box-wrapper">
           <van-image @click="preview(date, index)" :src="img.url+short" v-for="(img, index) in imgs" :key="index" lazy-load class="box spe">
-            <template v-slot:loading> <van-loading /> </template>
+            <template v-slot:loading>
+              <van-loading /> </template>
           </van-image>
           <!-- <img @click="preview(date, index)" v-for="(img, index) in imgs" :key="index" v-lazy="img.url+short" class="box spe" /> -->
         </div>
       </div>
 
-      <van-image-preview v-model="show" :images="images" @close="previewClose" :show-index="true" :startPosition="index">
+      <van-image-preview v-model="show" :images="images" @close="previewClose" class-name="image-preview-view" :show-index="true" :startPosition="index">
         <template v-slot:cover>
-          <div style="height:7rem;" class="pic_detail-wrap">
-            {{detail}}
+          <div class="pic_detail-wrap flex-layout">
+            <div class="param flex-layout" v-show="detail.val" v-for="(detail, index) in details" :key="index">
+              <span class="param-title">{{detail.name}} :</span>
+              <span>{{detail.val}}</span>
+            </div>
           </div>
         </template>
       </van-image-preview>
@@ -25,6 +29,7 @@
     <div class="animate__animated lock" :class="animateClass">
       <van-image height='100vh' width="100vw" fit="cover" :src="tempImg" />
       <div @click="test" class="wrap">
+        <div class="time">{{nowTime}}</div>
         <div class="a-icon picon_zhiwen"></div>
       </div>
     </div>
@@ -36,13 +41,15 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import VueBase from '@/vueBase'
 import { Lazyload, Loading, ImagePreview, Divider } from 'vant'
-Vue.use(Lazyload, { /** loading: './favicon.ico', */ })
+Vue.use(Lazyload, {
+  /** loading: './favicon.ico', */
+})
 
 @Component({
   components: {
     [ImagePreview.Component.name]: ImagePreview.Component,
     [Divider.name]: Divider,
-    [Loading.name]: Loading
+    [Loading.name]: Loading,
   },
 })
 export default class Index extends VueBase {
@@ -55,17 +62,25 @@ export default class Index extends VueBase {
   private testShow: boolean = false
   private tempImg: string = 'http://photo.palxp.com/top/1596184266925.jpeg'
   private animateClass: string = ''
+  private nowTime: string = '00:00'
 
   private imgList: Type.Object = {}
   private images: string[] = []
   private show: boolean = false
   private index: number = 0
-  private detail: Type.Object = {}
+  private details: Type.Object = {}
   private short: string =
     '?imageMogr2/thumbnail/180x/blur/1x0/quality/75|watermark/2/text/U2hhd25QaGFuZw==/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzMzMw==/dissolve/89/gravity/SouthEast/dx/7/dy/7'
 
   private async created() {
     let res = await this.$ajax.qn.getList({ bucket: 'my-ablum', limit: 999 })
+    res = res.filter((item: string) => {
+      const name = item.split('.')[0]
+      const dateTime = name.substring(name.indexOf('/') + 1)
+      if (!isNaN(+dateTime)) {
+        return item && item.trim()
+      }
+    })
     res = res.map((item: string) => {
       const name = item.split('.')[0]
       // let topic = 'Daily'
@@ -78,7 +93,9 @@ export default class Index extends VueBase {
       const url = 'http://photo.palxp.com/' + item
       return this.$Imap({ date, url })
     })
-    const newData = this.$Ilist(res).groupBy((x: any) => x.get('date'))
+    console.log(res)
+
+    const newData = this.$Ilist(res).groupBy((x: any) => x && x.get('date'))
     const imgList = JSON.parse(JSON.stringify(newData.toArray()))
     const result: Type.Object = {}
     for (const item of imgList) {
@@ -96,6 +113,7 @@ export default class Index extends VueBase {
   }
   private async mounted() {
     await this.$nextTick()
+    this.nowTime = this.$utils.dayjs(new Date()).format('HH:mm')
   }
 
   private async preview(date: string, index: number) {
@@ -106,30 +124,49 @@ export default class Index extends VueBase {
     this.show = true
 
     const res = await this.$ajax.qn.getExif(this.images[index])
-    let trans_field = [
-      // ExposureTime: '曝光',
+    let TRANS_FIELD = [
       {
-        name: '光圈',
-        key: 'FNumber'
-      },{
-        name: '快门',
-        key: 'ShutterSpeedValue'
-      },{
-        name: 'ISO',
-        key: 'ISOSpeedRatings'
-      },{
         name: '型号',
-        key: 'Model'
-      }
+        key: 'Model',
+      },
+      {
+        name: '焦距',
+        key: 'FocalLength',
+      },
+      {name: '参数', val: '${res.FNumber.val}, ${(res.ExposureTime.val).split(" ")[0]}s, iso${res.ISOSpeedRatings.val}'},
+      // {
+      //   name: '光圈',
+      //   key: 'FNumber',
+      // },
+      // {
+      //   name: '快门',
+      //   key: 'ShutterSpeedValue',
+      // },
+      // {
+      //   name: '快门',
+      //   key: 'ExposureTime',
+      // },
+      // {
+      //   name: 'ISO',
+      //   key: 'ISOSpeedRatings',
+      // },
+      { name: '时间', key: 'DateTime' },
     ]
-    trans_field = trans_field.map((item: any) => {
-      item.val = res[item.key]?res[item.key].val:''
+    TRANS_FIELD = TRANS_FIELD.map((item: any) => {
+      if (item.val) {
+        try {
+          item.val = eval('`' + item.val + '`')
+        } catch (error) {
+          item.val = ''
+        }
+      } else { item.val = res[item.key] ? res[item.key].val : '' }
       return item
     })
-    this.detail = trans_field
+    this.details = TRANS_FIELD
   }
   private previewClose() {
     this.images = []
+    this.details = []
     this.index = 0
   }
   /**
@@ -147,7 +184,24 @@ export default class Index extends VueBase {
 }
 </script>
 
+<style>
+.image-preview-view{
+  background: #000000;
+}
+</style>
+
 <style lang="less" scoped>
+@keyframes bulingbuling {
+  0% {
+    opacity: 0.37;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.37;
+  }
+}
 .lock {
   height: 100vh;
   width: 100vw;
@@ -159,7 +213,17 @@ export default class Index extends VueBase {
     top: 0;
     width: 100%;
     height: 100vh;
+    .time {
+      color: #fff;
+      font-weight: 100;
+      font-size: 10rem;
+      text-align: center;
+      width: 100%;
+      position: absolute;
+      top: 12vh;
+    }
     .picon_zhiwen {
+      animation: bulingbuling 2.7s infinite;
       text-align: center;
       margin-top: 77vh;
       color: rgba(255, 255, 255, 0.7);
@@ -168,18 +232,23 @@ export default class Index extends VueBase {
   }
 }
 
-
-
 .pic_detail-wrap {
-  color:#fff;
+  color: #fff;
   position: fixed;
   width: 100%;
   bottom: 0;
+  flex-wrap: wrap;
+  padding: 1rem 0;
+  background: rgba(0,0,0,.6);
+  .param {
+    min-width: 50%;
+    padding: 0.27rem 1rem;
+  }
+  .param-title {
+    text-align: center;
+    width: 42px;
+  }
 }
-
-
-
-
 
 .title-pic {
   width: 100%;
