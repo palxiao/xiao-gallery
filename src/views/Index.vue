@@ -93,7 +93,6 @@ export default class Index extends VueBase {
       const url = 'http://photo.palxp.com/' + item
       return this.$Imap({ date, url })
     })
-    console.log(res)
 
     const newData = this.$Ilist(res).groupBy((x: any) => x && x.get('date'))
     const imgList = JSON.parse(JSON.stringify(newData.toArray()))
@@ -102,6 +101,8 @@ export default class Index extends VueBase {
       result[item[0]] = item[1]
     }
     this.imgList = result
+    console.log(result);
+    
 
     //   const topicData = this.$Ilist(res).groupBy((x: any) => x.get('topic'))
     //   const imgListByTopic = JSON.parse(JSON.stringify(topicData.toArray()))
@@ -133,7 +134,7 @@ export default class Index extends VueBase {
         name: '焦距',
         key: 'FocalLength',
       },
-      {name: '参数', val: '${res.FNumber.val}, ${(res.ExposureTime.val).split(" ")[0]}s, iso${res.ISOSpeedRatings.val}'},
+      {name: '参数', val: '${res.FNumber.val}, ${(res.ExposureTime.val).split(" ")[0]}s, IOS${res.ISOSpeedRatings.val}'},
       // {
       //   name: '光圈',
       //   key: 'FNumber',
