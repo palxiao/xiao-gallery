@@ -14,7 +14,7 @@ export default {
     VERSION: '0.0.3.beta',
     APP_COPYRIGHT: '',
     API_URL: apiUrl,
-    IMG_URL: '',
+    IMG_URL: 'http://photo.palxp.com/',
     // login: 'http://  /login',
     // wx_redirectUri: 'http://localhost:8080'
     // wx_redirectUri: 'http://192.168.2.130:8080'

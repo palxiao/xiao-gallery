@@ -11,6 +11,7 @@ export default class PreLoad {
                 if (this.i < this.arr.length) {
                     const img = new Image()
                     img.src = src;
+                    console.log(`Load ${src}`);
                     cb(((this.i + 1) / this.arr.length) * 100) // 进度反馈
                     if (img.complete) {
                         work(this.arr[this.i++])

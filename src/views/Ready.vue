@@ -24,7 +24,9 @@ export default class Ready extends VueBase {
   private done: boolean = false
   private progress: number = 0
 
-  private async created() {
+  private async mounted() {
+    await this.$nextTick()
+
     let res = await this.$ajax.qn.getList({ bucket: 'my-ablum', prefix: 'top' })
     res = res.map((url: string) => {
       return 'http://photo.palxp.com/' + url
@@ -37,10 +39,6 @@ export default class Ready extends VueBase {
     setTimeout(() => {
       this.done = true
     }, 300);
-  }
-
-  private async mounted() {
-    await this.$nextTick()
 
     // this.$commit('loading', '拼命加载ing..');
     // this.done = true
