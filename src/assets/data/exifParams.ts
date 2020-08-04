@@ -1,3 +1,10 @@
+const GROUP_LEVEL: Type.Object = {
+  topic: 4,
+  year: 3,
+  month: 2,
+  time: 1
+}
+
 const TRANS_FIELD: Type.Object = [
   {
     name: '型号',
@@ -27,4 +34,4 @@ const TRANS_FIELD: Type.Object = [
   { name: '时间', key: 'DateTime' },
 ]
 
-export default TRANS_FIELD
+export { TRANS_FIELD, GROUP_LEVEL }

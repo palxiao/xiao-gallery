@@ -33,11 +33,10 @@
   import { Component, Vue, Watch } from 'vue-property-decorator'
   import VueBase from '@/vueBase'
   import { Lazyload, Loading, ImagePreview, Divider } from 'vant'
+  import {TRANS_FIELD, GROUP_LEVEL} from '@/assets/data/exifParams'
   import Lock from '@/components/Lock.vue'
-  import TRANS_FIELD from '@/assets/data/exifParams'
-  Vue.use(Lazyload, {
-    /** loading: './favicon.ico', */
-  })
+
+  Vue.use(Lazyload, { /** loading: './favicon.ico', */ })
 
   @Component({
     components: {
@@ -61,43 +60,45 @@
 
     private async created() {
       let res = await this.$ajax.qn.getList({ bucket: 'my-ablum', limit: 999 })
-      res = res.filter((item: string) => { // 排除不在规范内的图片
-        const name = item.split('.')[0]
-        const dateTime = name.substring(name.indexOf('/') + 1)
-        if (!isNaN(+dateTime)) {
-          return item && item.trim()
-        }
-      })
-      res = res.map((item: string) => {
-        const name = item.split('.')[0]
-        // let topic = 'Daily'
-        // if (name.indexOf('/') !== -1) {
-        //   topic = name.split('/')[0]
-        // }
-
-        const dateTime = name.substring(name.indexOf('/') + 1)
-        const date = this.$utils.dayjs(+dateTime).format('YYYY-MM-DD')
-        const url = 'http://photo.palxp.com/' + item
-        return this.$Imap({ date, url })
-      })
-
-      const newData = this.$Ilist(res).groupBy((x: any) => x && x.get('date'))
-      const imgList = JSON.parse(JSON.stringify(newData.toArray()))
-      const result: Type.Object = {}
-      for (const item of imgList) {
-        result[item[0]] = item[1]
-      }
-      this.imgList = result
-      console.log(result)
-
-      //   const topicData = this.$Ilist(res).groupBy((x: any) => x.get('topic'))
-      //   const imgListByTopic = JSON.parse(JSON.stringify(topicData.toArray()))
-      //   const result2: Type.Object = {}
-      //   for (const item of imgListByTopic) {
-      //     result2[item[0]] = item[1]
-      //   }
-      //  console.log(result2);
+      this.assembly(res)
+      // this.assembly(res, 'topic')
+      // this.assembly(res, 'year')
+      // this.assembly(res, 'month')
+      console.log('装载完毕');
+      
     }
+    /**
+     * 组装图片列表方法
+     */
+    private assembly(res: Type.Object, type: string = 'time') {
+      res = res.filter((item: string) => { // 过滤不在规范内的图片
+        const {dateTime} = this.parsing(item)
+        if (!isNaN(dateTime)) { return item && item.trim() }
+      })
+      res = res.map((item: string) => { // 组装图片数据
+        const {params, dateTime} = this.parsing(item)
+        const group = params[params.length - GROUP_LEVEL[type]]
+        const date = this.$utils.dayjs(dateTime).format('YYYY-MM-DD')
+        const url = 'http://photo.palxp.com/' + item
+        return { date, url, group }
+      })
+      const imgList = new this.$utils.GroupArray(res)
+      const result: Type.Object = {}
+      const key = type==='time'?'date':'group'
+      for (const item of imgList.groupByKey(key)) {
+        result[item[0][key]] = item
+      }
+      result.undefined && delete result.undefined
+      this.imgList = JSON.parse(JSON.stringify(result))
+      console.log(result);
+    }
+    private parsing(item: string) {
+        const params = item.split('.')[0].split('/')
+        const dateTime = +params[params.length-1]
+        return {params, dateTime: +params[params.length-1]}
+    }
+    /** -- END -- */
+
     private async mounted() {
       await this.$nextTick()
     }

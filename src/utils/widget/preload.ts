@@ -7,25 +7,27 @@ export default class PreLoad {
     }
     public imgs(cb: (n: number) => void) {
         return new Promise(resolve => {
-            const work = (src: string) => {
+            const work = () => {
                 if (this.i < this.arr.length) {
                     const img = new Image()
-                    img.src = src;
-                    console.log(`Load ${src}`);
+                    img.src = this.arr[this.i]
+                    // console.log(`Load ${this.arr[this.i]}`);
                     cb(((this.i + 1) / this.arr.length) * 100) // 进度反馈
                     if (img.complete) {
-                        work(this.arr[this.i++])
+                        this.i++
+                        work()
                     } else {
                         img.onload = () => {
-                            work(this.arr[this.i++])
-                            img.onload = null;
+                            this.i++
+                            work()
+                            img.onload = null
                         };
                     }
                 } else {
                     resolve()
                 }
             }
-            work(this.arr[this.i])
+            work()
         })
     }
 }

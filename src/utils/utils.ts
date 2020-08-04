@@ -4,8 +4,11 @@ export const regular = mRegular
 import app_config from '@/config';
 export const config = app_config
 
-import Preload from './widget/preload'
-export const preload = Preload
+// import Preload from './widget/preload'
+// export const preload = Preload
+
+import groupArray from './widget/group-array'
+export const GroupArray = groupArray
 
 import dayjs from 'dayjs'
 export { dayjs }

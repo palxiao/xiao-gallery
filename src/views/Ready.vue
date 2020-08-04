@@ -15,6 +15,7 @@ import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator'
 import VueBase from '@/vueBase'
 import { mapMutations } from 'vuex'
 import { Image as VanImage } from 'vant'
+import Preload from '@/utils/widget/preload'
 Vue.use(VanImage)
 
 @Component({
@@ -32,7 +33,7 @@ export default class Ready extends VueBase {
       return 'http://photo.palxp.com/' + url
     })
 
-    const preload = new this.$utils.preload(res)
+    const preload = new Preload(res)
     const preDone = await preload.imgs((progress: any) => {
       this.progress = +progress.toFixed(0)
     })
