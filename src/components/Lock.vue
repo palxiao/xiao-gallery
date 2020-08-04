@@ -59,6 +59,7 @@
     position: fixed;
     overflow: hidden;
     top: 0;
+    z-index: 9999;
     .wrap {
       position: absolute;
       top: 0;

@@ -2,7 +2,7 @@
   <div class="home">
     <div v-show="visiable" class="animate__animated animate__fadeIn">
       <van-image :height="windowWidth / 1.9" width="100vw" fit="cover" class="animate__animated animate__bounceIn" :src="topImg">
-        <img class="take_photo" :style="'height:'+windowWidth / 1.9+'px;'" :src="require('../assets/images/take_photo.png')" alt="">
+        <img class="take_photo" :style="'height:' + windowWidth / 1.9 + 'px;'" :src="require('../assets/images/take_photo.png')" alt="" />
       </van-image>
 
       <div v-for="(imgs, date, key) in imgList" :key="key">
@@ -28,6 +28,7 @@
     </div>
 
     <lock v-model="visiable" />
+    <side :data="sideList" @select="sideSelect" />
   </div>
 </template>
 
@@ -35,8 +36,9 @@
   import { Component, Vue, Watch } from 'vue-property-decorator'
   import VueBase from '@/vueBase'
   import { Loading, ImagePreview, Divider } from 'vant'
-  import { TRANS_FIELD, GROUP_LEVEL } from '@/assets/data/exifParams'
+  import { TRANS_FIELD, GROUP_LEVEL, freezeObject } from '@/assets/data/constantParams'
   import Lock from '@/components/Lock.vue'
+  import Side from '@/components/Side.vue'
 
   @Component({
     components: {
@@ -44,6 +46,7 @@
       [Divider.name]: Divider,
       [Loading.name]: Loading,
       Lock,
+      Side,
     },
   })
   export default class Index extends VueBase {
@@ -51,7 +54,8 @@
     //   super();
     // }
     private visiable: boolean = false
-    private imgList: Type.Object = [] // 图片列表
+    private imgList: Type.Object = {} // 图片列表
+    private sideList: Type.Object = {} // 侧边列表
     private images: string[] = [] // 预览图组列表
     private show: boolean = false // 展示预览
     private index: number = 0 // 用于设置预览当前页
@@ -65,11 +69,12 @@
 
     private async created() {
       let res = await this.$ajax.qn.getList({ bucket: 'my-ablum', limit: 999 })
-      this.assembly(res)
-      // this.assembly(res, 'topic')
-      // this.assembly(res, 'year')
-      // this.assembly(res, 'month')
-      console.log('装载完毕')
+      this.imgList = this.assembly(res)
+      freezeObject.allImgList = this.imgList
+      freezeObject.topicImgList = this.assembly(res, 'topic')
+      freezeObject.yearImgList = this.assembly(res, 'year')
+      freezeObject.monthImgList = this.assembly(res, 'month')
+      this.sideList = freezeObject.topicImgList
     }
     private async mounted() {
       await this.$nextTick()
@@ -94,6 +99,7 @@
         const url = this.$utils.config.IMG_URL + item
         return { date, url, group }
       })
+
       const imgList = new this.$utils.GroupArray(res)
       const result: Type.Object = {}
       const key = type === 'time' ? 'date' : 'group'
@@ -101,8 +107,8 @@
         result[item[0][key]] = item
       }
       result.undefined && delete result.undefined
-      this.imgList = JSON.parse(JSON.stringify(result))
-      console.log(result)
+      // const newResult = JSON.parse(JSON.stringify(result))
+      return this.$utils.GroupArray.sortObj(result)
     }
     private parsing(item: string) {
       const params = item.split('.')[0].split('/')
@@ -143,6 +149,18 @@
       this.index = 0
     }
     /** END */
+    private sideSelect(type: string | null) {
+      if (!type) {
+        this.imgList = freezeObject.allImgList
+        return
+      }
+      const obj: Type.Object = {}
+      obj[type] = this.sideList[type]
+      this.imgList = obj
+    }
+    // private chooseModel() {
+      
+    // }
   }
 </script>
 

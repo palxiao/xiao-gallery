@@ -3,32 +3,44 @@
  */
 
 class GroupArray {
-    private originalArray: Array<string | number | object>
+  /**
+   * 临时 对象排序 倒序
+   */
+  public static sortObj(data: Type.Object): any {
+    const newData: Type.Object = {}
+    Object.keys(data)
+      .sort((a: any, b: any) => {
+        return b.localeCompare(a)
+      })
+      .map((key) => {
+        newData[key] = data[key]
+      })
+    return newData
+  }
 
-    constructor(originalArray = []) {
-        this.originalArray = originalArray
-    }
+  private originalArray: Array<string | number | object>
 
-    groupByKey(key: string): any[] {
-        return this.groupBy(item => {
-            if (typeof item[key] === 'undefined') {
-                return []
-            }
-            return [item[key]]
-        })
-    }
+  constructor(originalArray = []) {
+    this.originalArray = originalArray
+  }
 
-    groupBy(fn: (item: any) => void): any[] {
-        const groups: Type.Object = {}
-        for (const item of this.originalArray) {
-            const group = JSON.stringify(fn(item))
-            groups[group] = groups[group] || []
-            groups[group].push(item)
-        }
-        return Object.keys(groups).map((group) => {
-            return groups[group]
-        })
+  public groupByKey(key: string): any[] {
+    return this.groupBy((item) => {
+      return [item[key]]
+    })
+  }
+
+  private groupBy(fn: (item: any) => void): any[] {
+    const groups: Type.Object = {}
+    for (const item of this.originalArray) {
+      const group = JSON.stringify(fn(item))
+      groups[group] = groups[group] || []
+      groups[group].push(item)
     }
+    return Object.keys(groups).map((group) => {
+      return groups[group]
+    })
+  }
 }
 
 export default GroupArray

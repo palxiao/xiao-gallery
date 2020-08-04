@@ -34,4 +34,6 @@ const TRANS_FIELD: Type.Object = [
   { name: '时间', key: 'DateTime' },
 ]
 
-export { TRANS_FIELD, GROUP_LEVEL }
+const freezeObject: Type.Object = {}
+
+export { TRANS_FIELD, GROUP_LEVEL, freezeObject }
