@@ -1,7 +1,9 @@
 <template>
-  <div>
+  <div class="home">
     <div v-show="visiable" class="animate__animated animate__fadeIn">
-      <img class="title-pic animate__animated animate__bounceIn" src="http://photo.palxp.com/top/1596184256550.png" alt="" />
+      <van-image :height="windowWidth / 1.9" width="100vw" fit="cover" class="animate__animated animate__bounceIn" :src="topImg">
+        <img class="take_photo" :style="'height:'+windowWidth / 1.9+'px;'" :src="require('../assets/images/take_photo.png')" alt="">
+      </van-image>
 
       <div v-for="(imgs, date, key) in imgList" :key="key">
         <van-divider content-position="left">{{ date }}</van-divider>
@@ -32,11 +34,9 @@
 <script lang="ts">
   import { Component, Vue, Watch } from 'vue-property-decorator'
   import VueBase from '@/vueBase'
-  import { Lazyload, Loading, ImagePreview, Divider } from 'vant'
-  import {TRANS_FIELD, GROUP_LEVEL} from '@/assets/data/exifParams'
+  import { Loading, ImagePreview, Divider } from 'vant'
+  import { TRANS_FIELD, GROUP_LEVEL } from '@/assets/data/exifParams'
   import Lock from '@/components/Lock.vue'
-
-  Vue.use(Lazyload, { /** loading: './favicon.ico', */ })
 
   @Component({
     components: {
@@ -56,7 +56,12 @@
     private show: boolean = false // 展示预览
     private index: number = 0 // 用于设置预览当前页
     private details: Type.Object = {} // 图片EXIF信息
-    private short: string = '?imageMogr2/thumbnail/180x/blur/1x0/quality/75|watermark/2/text/U2hhd25QaGFuZw==/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzMzMw==/dissolve/89/gravity/SouthEast/dx/7/dy/7'
+    private topImg: string = '' // 置顶图片
+    private short: string = `?imageMogr2/thumbnail/${(window.screen.width / 2).toFixed(0)}x/blur/1x0/quality/85|watermark/2/text/U2hhd25QaGFuZw==/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzMzMw==/dissolve/89/gravity/SouthEast/dx/7/dy/7`
+
+    public get windowWidth(): string | number {
+      return this.$getters.windowWidth
+    }
 
     private async created() {
       let res = await this.$ajax.qn.getList({ bucket: 'my-ablum', limit: 999 })
@@ -64,44 +69,48 @@
       // this.assembly(res, 'topic')
       // this.assembly(res, 'year')
       // this.assembly(res, 'month')
-      console.log('装载完毕');
-      
+      console.log('装载完毕')
+    }
+    private async mounted() {
+      await this.$nextTick()
+      this.topImg = JSON.parse(localStorage.getItem('top_pic') + '')[0]
     }
     /**
      * 组装图片列表方法
      */
     private assembly(res: Type.Object, type: string = 'time') {
-      res = res.filter((item: string) => { // 过滤不在规范内的图片
-        const {dateTime} = this.parsing(item)
-        if (!isNaN(dateTime)) { return item && item.trim() }
+      res = res.filter((item: string) => {
+        // 过滤不在规范内的图片
+        const { dateTime } = this.parsing(item)
+        if (!isNaN(dateTime)) {
+          return item && item.trim()
+        }
       })
-      res = res.map((item: string) => { // 组装图片数据
-        const {params, dateTime} = this.parsing(item)
+      res = res.map((item: string) => {
+        // 组装图片数据
+        const { params, dateTime } = this.parsing(item)
         const group = params[params.length - GROUP_LEVEL[type]]
         const date = this.$utils.dayjs(dateTime).format('YYYY-MM-DD')
-        const url = 'http://photo.palxp.com/' + item
+        const url = this.$utils.config.IMG_URL + item
         return { date, url, group }
       })
       const imgList = new this.$utils.GroupArray(res)
       const result: Type.Object = {}
-      const key = type==='time'?'date':'group'
+      const key = type === 'time' ? 'date' : 'group'
       for (const item of imgList.groupByKey(key)) {
         result[item[0][key]] = item
       }
       result.undefined && delete result.undefined
       this.imgList = JSON.parse(JSON.stringify(result))
-      console.log(result);
+      console.log(result)
     }
     private parsing(item: string) {
-        const params = item.split('.')[0].split('/')
-        const dateTime = +params[params.length-1]
-        return {params, dateTime: +params[params.length-1]}
+      const params = item.split('.')[0].split('/')
+      const dateTime = +params[params.length - 1]
+      return { params, dateTime: +params[params.length - 1] }
     }
     /** -- END -- */
 
-    private async mounted() {
-      await this.$nextTick()
-    }
     /**
      * 图片预览相关
      */
@@ -144,6 +153,21 @@
 </style>
 
 <style lang="less" scoped>
+  .home::-webkit-scrollbar {
+    display: none; /* Chrome Safari */
+    width: 0 !important;
+  }
+  .home {
+    overflow: -moz-scrollbars-none;
+    -ms-overflow-style: none;
+  }
+
+  .take_photo {
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
   .pic_detail-wrap {
     color: #fff;
     position: fixed;
@@ -162,9 +186,6 @@
     }
   }
 
-  .title-pic {
-    width: 100%;
-  }
   .box {
     -moz-page-break-inside: avoid;
     -webkit-column-break-inside: avoid;

@@ -11,10 +11,14 @@ const all = {
     online: true, // 登录状态，
     user: {}, // 储存用户信息
     windowHeight: document.documentElement.clientHeight || document.body.clientHeight,
+    windowWidth: window.screen.width
   },
   getters: {
     windowHeight: (state: Type.Object) => {
       return state.windowHeight
+    },
+    windowWidth: (state: Type.Object) => {
+      return state.windowWidth
     },
     online: (state: Type.Object) => {
       return state.online

@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div class="animate__animated lock" :class="animateClass">
-    <van-image height="100vh" width="100vw" fit="cover" :src="tempImg" />
+    <van-image height="100vh" width="100vw" fit="cover" :src="topImg" />
     <div @click="tap" class="wrap">
       <div class="time">{{ nowTime }}</div>
       <div class="a-icon picon_zhiwen"></div>
@@ -17,11 +17,13 @@
   export default class Name extends VueBase {
     @Prop(Boolean)
     private value!: boolean
-
-    private tempImg: string = 'http://photo.palxp.com/top/1596184266925.jpeg'
+    private topImg: string = ''
     private animateClass: string = ''
     private nowTime: string = '00:00'
     // get computed() { return 'computed' }
+    private created() {
+      this.topImg = JSON.parse(localStorage.getItem('top_pic') + '')[0]
+    }
     private async mounted() {
       await this.$nextTick()
       this.nowTime = this.$utils.dayjs(new Date()).format('HH:mm')
