@@ -8,7 +8,7 @@ filter(Vue)
 /** 全局组件 */
 import modules from './widget/modules'
 modules(Vue)
-import { Map as mmap, List } from 'immutable'
+// import { Map as mmap, List } from 'immutable'
 /** 复制到剪贴板 */
 // import VueClipboard from 'vue-clipboard2'
 // Vue.use(VueClipboard)
@@ -27,10 +27,10 @@ export default {
         myVue.prototype.$bus = new Vue(); // 广播事件
 
         /**
-         * 状态管理器相关
+         * 不可变数据处理
          */
-        myVue.prototype.$Ilist = List;
-        myVue.prototype.$Imap = mmap;
+        // myVue.prototype.$Ilist = List;
+        // myVue.prototype.$Imap = mmap;
 
         /**
          * 状态管理器相关

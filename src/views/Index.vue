@@ -28,7 +28,7 @@
     </div>
 
     <lock v-model="visiable" />
-    <side :hide="visiable==='hideSide'" :data="sideList" @select="sideSelect" />
+    <side :hide="visiable === 'hideSide'" :data="sideList" @select="sideSelect" />
   </div>
 </template>
 
@@ -67,7 +67,7 @@
     }
 
     private async created() {
-      let res = await this.$ajax.qn.getList({ bucket: 'my-ablum', limit: 999 })
+      const res = await this.$ajax.qn.getList({ bucket: 'my-ablum', limit: 999 })
       this.imgList = this.assembly(res)
       freezeObject.allImgList = this.imgList
       freezeObject.topicImgList = this.assembly(res, 'topic')
@@ -105,7 +105,7 @@
       for (const item of imgList.groupByKey(key)) {
         result[item[0][key]] = item
       }
-      result.undefined && delete result.undefined
+      const check = result.undefined && delete result.undefined
       // const newResult = JSON.parse(JSON.stringify(result))
       return this.$utils.GroupArray.sortObj(result)
     }
@@ -159,9 +159,7 @@
       obj[type] = this.sideList[type]
       this.imgList = obj
     }
-    // private chooseModel() {
-      
-    // }
+    // private chooseModel() {}
   }
 </script>
 

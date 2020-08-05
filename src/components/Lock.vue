@@ -1,7 +1,9 @@
 <!--  -->
 <template>
   <div class="animate__animated lock" :class="animateClass">
-    <van-image height="100vh" width="100vw" fit="cover" :src="topImg" />
+    <van-image height="100vh" width="100vw" fit="cover" :src="topImg">
+      <template v-slot:loading> <van-loading /> </template>
+    </van-image>
     <div @click="tap" class="wrap">
       <div class="time">{{ nowTime }}</div>
       <div class="a-icon picon_zhiwen"></div>
