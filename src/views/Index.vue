@@ -28,14 +28,14 @@
     </div>
 
     <lock v-model="visiable" />
-    <side :data="sideList" @select="sideSelect" />
+    <side :hide="visiable==='hideSide'" :data="sideList" @select="sideSelect" />
   </div>
 </template>
 
 <script lang="ts">
   import { Component, Vue, Watch } from 'vue-property-decorator'
   import VueBase from '@/vueBase'
-  import { Loading, ImagePreview, Divider } from 'vant'
+  import { ImagePreview, Divider } from 'vant'
   import { TRANS_FIELD, GROUP_LEVEL, freezeObject } from '@/assets/data/constantParams'
   import Lock from '@/components/Lock.vue'
   import Side from '@/components/Side.vue'
@@ -44,7 +44,6 @@
     components: {
       [ImagePreview.Component.name]: ImagePreview.Component,
       [Divider.name]: Divider,
-      [Loading.name]: Loading,
       Lock,
       Side,
     },
@@ -53,7 +52,7 @@
     // public constructor() {
     //   super();
     // }
-    private visiable: boolean = false
+    private visiable: string = ''
     private imgList: Type.Object = {} // 图片列表
     private sideList: Type.Object = {} // 侧边列表
     private images: string[] = [] // 预览图组列表
@@ -121,6 +120,7 @@
      * 图片预览相关
      */
     private async preview(date: string, index: number) {
+      this.visiable = 'hideSide'
       this.images = this.imgList[date].map((item: Type.Object) => {
         return item.url
       })
@@ -144,6 +144,7 @@
       this.details = transField
     }
     private previewClose() {
+      this.visiable = 'start'
       this.images = []
       this.details = []
       this.index = 0
@@ -217,8 +218,9 @@
     margin-bottom: 1rem;
     width: 100%;
     height: auto;
+    overflow: hidden;
     // box-shadow: 0 0 0.7rem #777777;
-    // border-radius: 7px;
+    border-radius: 4px;
   }
   .box-wrapper {
     margin: 1rem;

@@ -15,8 +15,8 @@
     components: {},
   })
   export default class Name extends VueBase {
-    @Prop(Boolean)
-    private value!: boolean
+    @Prop(String)
+    private value!: string
     private topImg: string = ''
     private animateClass: string = ''
     private nowTime: string = '00:00'
@@ -32,7 +32,7 @@
     private tap() {
       this.animateClass = 'animate__fadeOutUp'
       setTimeout(() => {
-        this.$emit('input', true)
+        this.$emit('input', 'start')
       }, 100)
     }
     // @Emit('change')

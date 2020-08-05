@@ -14,9 +14,9 @@
   import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator'
   import VueBase from '@/vueBase'
   // import { mapMutations } from 'vuex'
-  import { Image as VanImage, Lazyload } from 'vant'
+  import { Image as VanImage, Lazyload, Loading } from 'vant'
   import Preload from '@/utils/widget/preload'
-  Vue.use(VanImage).use(Lazyload, {
+  Vue.use(VanImage).use(Loading).use(Lazyload, {
     /** loading: './favicon.ico', */
   })
 
