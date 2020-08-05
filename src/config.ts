@@ -1,13 +1,13 @@
 /**
  *   0 本地服务器   1 线上服务器
  */
-const environment: number = 0;
+const environment: number = 1;
 
 let apiUrl!: string;
 if (environment === 0) {
-    apiUrl = 'http://localhost:9999';
+    apiUrl = 'http://localhost:9998';
 } else {
-    apiUrl = 'http://app.palxp.com:9999';
+    apiUrl = 'http://app.palxp.com:9998';
 }
 
 export default {
