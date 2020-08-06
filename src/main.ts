@@ -12,8 +12,8 @@ import '@vant/touch-emulator';
 import FastClick from 'fastclick'
 FastClick.attach(document.body)
 
-import VConsole from 'vconsole'
-const vConsole = new VConsole()
+// import VConsole from 'vconsole'
+// const vConsole = new VConsole()
 
 new Vue({
   router,
