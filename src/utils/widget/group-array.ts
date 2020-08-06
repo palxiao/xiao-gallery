@@ -10,7 +10,7 @@ class GroupArray {
     const newData: Type.Object = {}
     Object.keys(data)
       .sort((a: any, b: any) => {
-        return b.localeCompare(a)
+        return b.replace(/-/g, '') - a.replace(/-/g, '')
       })
       .map((key) => {
         newData[key] = data[key]

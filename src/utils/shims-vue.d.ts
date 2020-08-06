@@ -7,6 +7,7 @@ declare module 'qrcode'
 declare module 'vuejs-datepicker'
 declare module 'vuejs-datepicker/dist/locale'
 declare module '@antv/f2/*'
+declare module 'fastclick'
 
 declare module 'vue/types/vue' {
   interface Vue {

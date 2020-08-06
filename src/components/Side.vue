@@ -6,8 +6,8 @@
     <van-popup v-model="show" closeable position="right" :style="{ height: '100%', width: '40%' }">
       <div class="class_wrap">
         <div @click="select()" class="class_box"><span class="class_box-title flex-layout-center line-clamp-1">全部</span></div>
-        <div @click="select(type)" v-for="(imgs, type, key) in data" :key="key" class="class_box">
-          <van-image height="100%" width="100%" fit="cover" class="animate__animated animate__fadeIn" :src="imgs[0].url + short">
+        <div @click="select(type)" v-for="(imgs, type, key) in data" :key="key" class="class_box animate__animated animate__rollIn">
+          <van-image height="100%" width="100%" fit="cover" :src="imgs[0].url + short">
             <template v-slot:loading> <van-loading /> </template>
           </van-image>
           <div class="class_box-title flex-layout-center line-clamp-1">{{ type }}</div>

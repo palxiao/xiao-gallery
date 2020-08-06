@@ -9,6 +9,8 @@ Vue.config.productionTip = false;
 Vue.use(utils)
 
 import '@vant/touch-emulator';
+import FastClick from 'fastclick'
+FastClick.attach(document.body)
 
 // import VConsole from 'vconsole'
 // const vConsole = new VConsole()

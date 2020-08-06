@@ -15,7 +15,7 @@
         </div>
       </div>
 
-      <van-image-preview v-model="show" :images="images" @close="previewClose" class-name="image-preview-view" :show-index="true" :startPosition="index">
+      <van-image-preview v-model="show" :images="images" max-zoom="12" @close="previewClose" class-name="image-preview-view" :show-index="true" :startPosition="index">
         <template v-slot:cover>
           <div class="pic_detail-wrap flex-layout">
             <div class="param flex-layout" v-show="detail.val" v-for="(detail, index) in details" :key="index">
@@ -77,7 +77,7 @@
     }
     private async mounted() {
       await this.$nextTick()
-      this.topImg = JSON.parse(localStorage.getItem('top_pic') + '')[0]
+      this.topImg = JSON.parse(localStorage.getItem('top_pic') + '')[localStorage.getItem('top_pic-count') || 0]
     }
     /**
      * 组装图片列表方法
@@ -128,8 +128,8 @@
       this.show = true
 
       const res = await this.$ajax.qn.getExif(this.images[index])
-
-      const transField = TRANS_FIELD.map((item: any) => {
+      const transField = TRANS_FIELD.map((Item: any) => {
+        const item = Object.assign({}, Item)
         if (item.val) {
           try {
             item.val = eval('`' + item.val + '`')

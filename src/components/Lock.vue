@@ -5,7 +5,9 @@
       <template v-slot:loading> <van-loading /> </template>
     </van-image>
     <div @click="tap" class="wrap">
-      <div class="time">{{ nowTime }}</div>
+      <div class="time">{{ nowTime }}
+        <div class="sub_date">{{ nowDate }}</div>
+      </div>
       <div class="a-icon picon_zhiwen"></div>
     </div>
   </div>
@@ -22,13 +24,18 @@
     private topImg: string = ''
     private animateClass: string = ''
     private nowTime: string = '00:00'
+    private nowDate: string = ''
     // get computed() { return 'computed' }
     private created() {
-      this.topImg = JSON.parse(localStorage.getItem('top_pic') + '')[0]
+      const topImgs = JSON.parse(localStorage.getItem('top_pic') + '')
+      const count = this.$utils.random(1, topImgs.length) - 1
+      localStorage.setItem('top_pic-count', count + '')
+      this.topImg = topImgs[count]
     }
     private async mounted() {
       await this.$nextTick()
       this.nowTime = this.$utils.dayjs(new Date()).format('HH:mm')
+      this.nowDate = this.$utils.dayjs(new Date()).format('dddd, MMMM DD')
     }
 
     private tap() {
@@ -75,13 +82,17 @@
         width: 100%;
         position: absolute;
         top: 12vh;
+        .sub_date {
+          font-size: 15px;
+          padding: 4px 0;
+        }
       }
       .picon_zhiwen {
         animation: bulingbuling 2.7s infinite;
         text-align: center;
         margin-top: 77vh;
         color: rgba(255, 255, 255, 0.7);
-        font-size: 7.7rem;
+        font-size: 8.7rem;
       }
     }
   }
