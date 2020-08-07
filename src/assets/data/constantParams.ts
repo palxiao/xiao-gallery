@@ -14,7 +14,8 @@ const TRANS_FIELD: Type.Object = [
     name: '焦距',
     key: 'FocalLength',
   },
-  { name: '参数', val: '${res.FNumber.val}, ${(res.ExposureTime.val).split(" ")[0]}s, IOS${res.ISOSpeedRatings.val}' },
+  // { name: '参数', val: '${res.FNumber.val}, ${(res.ExposureTime.val).split(" ")[0]}s, IOS${res.ISOSpeedRatings.val}' },
+  { name: '参数', val: '${FNumber}, ${ExposureTime}s, IOS${ISOSpeedRatings}' },
   { name: '时间', key: 'DateTime' },
   // {
   //   name: '光圈',

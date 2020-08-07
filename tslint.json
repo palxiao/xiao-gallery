@@ -9,7 +9,7 @@
     ]
   },
   "rules": {
-    "no-eval": false,
+    "no-empty": false,
     "only-arrow-functions": [false, "allow-declarations", "allow-named-functions"],
     "quotemark": [true, "single"],
     "indent": [true, "spaces", 2],
