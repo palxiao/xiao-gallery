@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div v-show="visiable" class="animate__animated animate__fadeIn">
-      <van-image :height="windowWidth / 1.9" width="100vw" fit="cover" class="animate__animated animate__bounceIn" :src="topImg">
+      <van-image :height="windowWidth / 1.9" width="100%" fit="cover" class="animate__animated animate__bounceIn" :src="topImg">
         <img class="take_photo" :style="'height:' + windowWidth / 1.9 + 'px;'" :src="require('../assets/images/take_photo.png')" alt="" />
       </van-image>
 
@@ -62,9 +62,13 @@
     private topImg: string = '' // 置顶图片
     private orient: string = '?imageMogr2/auto-orient'
     private short: string = `?imageMogr2/auto-orient/thumbnail/${(window.screen.width / 2).toFixed(0)}x/blur/1x0/quality/85|watermark/2/text/U2hhd25QaGFuZw==/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzMzMw==/dissolve/89/gravity/SouthEast/dx/7/dy/7`
+    private scrollTop: number | undefined = 0
 
     public get windowWidth(): string | number {
       return this.$getters.windowWidth
+    }
+    public get windowHeight(): string | number {
+      return this.$getters.windowHeight
     }
 
     private async created() {
@@ -79,6 +83,18 @@
     private async mounted() {
       await this.$nextTick()
       this.topImg = JSON.parse(localStorage.getItem('top_pic') + '')[localStorage.getItem('top_pic-count') || 0]
+
+      window.history.pushState(null, '', document.URL);
+      // 给window添加一个popstate事件，拦截返回键，执行this.onBrowserBack事件，addEventListener需要指向一个方法
+      window.addEventListener("popstate", this.onBrowserBack, false);
+    }
+    private onBrowserBack() {
+      setTimeout(() => {
+        window.scrollTo(0, this.scrollTop);
+      }, 30);
+      window.history.pushState(null, '', document.URL)
+      // window.history.forward(1)
+      this.show = false
     }
     /**
      * 组装图片列表方法
@@ -121,6 +137,8 @@
      * 图片预览相关
      */
     private async preview(date: string, index: number) {
+      this.scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
+      
       this.visiable = 'hideSide'
       this.images = this.imgList[date].map((item: Type.Object) => {
         return item.url + this.orient
@@ -166,6 +184,11 @@
       this.imgList = obj
     }
     // private chooseModel() {}
+
+    private destroyed() {
+      // 当页面销毁必须要移除这个事件，vue不刷新页面，不移除会重复执行这个事件
+      window.removeEventListener("popstate", this.onBrowserBack, false);
+    }
   }
 </script>
 
