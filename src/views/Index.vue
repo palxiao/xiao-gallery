@@ -29,7 +29,7 @@
     </div>
 
     <lock v-model="visiable" />
-    <side :hide="visiable === 'hideSide'" :data="sideList" @select="sideSelect" />
+    <side :hide="visiable === 'hideSide'" :data="sideList" @select="sideSelect" @choose="chooseModel" />
   </div>
 </template>
 
@@ -193,7 +193,7 @@ export default class Index extends VueBase {
     const is = val && kv.keys.forEach((key: string, index: number) => {
       try {
         val = val.toString().replace(kv.values[index], res[key].val)
-      } catch (e) {}
+      } catch (e) { val = '' }
     })
     const dayjs = this.$utils.dayjs
     if (res[item.key] && dayjs(res[item.key].val).isValid()) {
@@ -213,7 +213,9 @@ export default class Index extends VueBase {
     obj[type] = this.sideList[type]
     this.imgList = obj
   }
-  // private chooseModel() {}
+  private chooseModel(type: string) {
+    this.sideList = freezeObject[`${type}ImgList`]
+  }
 
   private destroyed() {
     // 当页面销毁必须要移除这个事件，vue不刷新页面，不移除会重复执行这个事件

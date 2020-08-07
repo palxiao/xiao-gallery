@@ -5,6 +5,9 @@
     </div>
     <van-popup v-model="show" closeable position="right" :style="{ height: '100%', width: '40%' }">
       <div class="class_wrap">
+        <div class="flex-layout select_type">
+          <i @click="chooseModel(ii)" v-for="(i,ii) in icons" :key="ii" class="a-icon" :class="iconIndex===ii ? 'select picon_'+i : 'picon_'+i" />
+        </div>
         <div @click="select()" class="class_box"><span class="class_box-title flex-layout-center line-clamp-1">全部</span></div>
         <div @click="select(type)" v-for="(imgs, type, key) in data" :key="key" class="class_box animate__animated animate__rollIn">
           <van-image height="100%" width="100%" fit="cover" :src="imgs[0].url + short">
@@ -36,6 +39,8 @@
 
     private show: boolean = false
     private short: string = `?imageMogr2/thumbnail/${(window.screen.width / 3).toFixed(0)}x/blur/1x0/quality/75`
+    private icons: string[] = ['topic', 'year', 'month']
+    private iconIndex: number = 0
     // get computed() { return 'computed' }
     private async mounted() {
       await this.$nextTick()
@@ -44,6 +49,11 @@
     private select(type: string | null) {
       this.$emit('select', type)
       this.show = false
+    }
+
+    private chooseModel(index: number) {
+      this.iconIndex = index
+      this.$emit('choose', this.icons[index])
     }
 
     // @Emit('change')
@@ -90,5 +100,17 @@
   .picon_zhankai {
     color: #111;
     font-size: 18px;
+  }
+  .select_type {
+    padding-top: 24px;
+    margin: 0 10%;
+    justify-content: space-between;
+    .a-icon {
+      font-size: 32px;
+      color: rgba(0, 0, 0, 0.2);
+    }
+    .select {
+      color: #333;
+    }
   }
 </style>
