@@ -44,7 +44,7 @@ axios.interceptors.response.use((res: Type.Object) => {
 
   // if (res.status !== 200) {
   //   // return falseInfo
-  // }
+  // }  
 
   if (!res.data) {
     return Promise.reject(res)

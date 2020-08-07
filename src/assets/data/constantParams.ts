@@ -15,6 +15,7 @@ const TRANS_FIELD: Type.Object = [
     key: 'FocalLength',
   },
   { name: '参数', val: '${res.FNumber.val}, ${(res.ExposureTime.val).split(" ")[0]}s, IOS${res.ISOSpeedRatings.val}' },
+  { name: '时间', key: 'DateTime' },
   // {
   //   name: '光圈',
   //   key: 'FNumber',
@@ -31,9 +32,8 @@ const TRANS_FIELD: Type.Object = [
   //   name: 'ISO',
   //   key: 'ISOSpeedRatings',
   // },
-  { name: '时间', key: 'DateTime' },
 ]
 
-const freezeObject: Type.Object = {}
+const freezeObject: Type.Object = {} // 不参与渲染的冻结变量
 
 export { TRANS_FIELD, GROUP_LEVEL, freezeObject }
