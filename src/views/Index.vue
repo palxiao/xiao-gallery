@@ -2,7 +2,7 @@
   <div class="home">
     <div v-show="visiable" class="animate__animated animate__fadeIn">
       <van-image :height="windowWidth / 1.9" width="100%" fit="cover" class="animate__animated animate__bounceIn" :src="topImg">
-        <img class="take_photo" :style="'height:' + windowWidth / 1.9 + 'px;'" :src="require('../assets/images/take_photo.png')" alt="" />
+        <img @click="topPreview('Top')" class="take_photo" :style="'height:' + windowWidth / 1.9 + 'px;'" :src="require('../assets/images/take_photo.png')" alt="" />
       </van-image>
 
       <div v-for="(imgs, date, key) in imgList" :key="key">
@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <van-image-preview v-model="show" :images="images" max-zoom="12" @close="previewClose" class-name="image-preview-view" :show-index="true" :startPosition="index">
+      <van-image-preview v-model="show" :images="images" max-zoom="12" @close="previewClose" @change="previewChange" class-name="image-preview-view" :show-index="true" :startPosition="index">
         <template v-slot:cover>
           <div class="pic_detail-wrap flex-layout">
             <div class="param flex-layout" v-show="detail.val" v-for="(detail, index) in details" :key="index">
@@ -145,6 +145,12 @@ export default class Index extends VueBase {
   /**
    * 图片预览相关
    */
+  private topPreview(type: string) {
+    this.images = freezeObject.topicImgList[type].map((item: Type.Object) => {
+      return item.url + this.orient
+    })
+    this.preview('', 0)
+  }
   private async preview(date: string, index: number) {
     this.scrollTop =
       document.documentElement.scrollTop ||
@@ -152,12 +158,27 @@ export default class Index extends VueBase {
       document.body.scrollTop
 
     this.visiable = 'hideSide'
-    this.images = this.imgList[date].map((item: Type.Object) => {
-      return item.url + this.orient
-    })
+    if (date) {
+      this.images = this.imgList[date].map((item: Type.Object) => {
+        return item.url + this.orient
+      })
+    }
     this.index = index
     this.show = true
-
+    this.loadEXIF(index)
+  }
+  private previewClose() {
+    this.visiable = 'start'
+    this.images = []
+    this.details = []
+    this.index = 0
+  }
+  private previewChange(index: number) {
+    this.loadEXIF(index)
+  }
+  /** END */
+  /** EXIF显示相关 */
+   private async loadEXIF(index: number) {
     const res = await this.$ajax.qn.getExif(this.images[index].split('?')[0])
     const transField = TRANS_FIELD.map((Item: any) => {
       const item = Object.assign({}, Item)
@@ -181,12 +202,6 @@ export default class Index extends VueBase {
       } catch (e) { }
     }
     return val ? val.replace(' sec.', '') : res[item.key] ? res[item.key].val : ''
-  }
-  private previewClose() {
-    this.visiable = 'start'
-    this.images = []
-    this.details = []
-    this.index = 0
   }
   /** END */
   private sideSelect(type: string | null) {
