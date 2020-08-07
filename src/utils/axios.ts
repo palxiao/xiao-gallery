@@ -44,7 +44,7 @@ axios.interceptors.response.use((res: Type.Object) => {
 
   // if (res.status !== 200) {
   //   // return falseInfo
-  // }  
+  // }
 
   if (!res.data) {
     return Promise.reject(res)
@@ -92,8 +92,8 @@ const fetch = (url: string, params: Type.Object, type: string | undefined = 'get
     objtest.Authorization = '' + localStorage.getItem('token')
     return (axios as Type.Object)[type](url,
       params, {
-        headers: objtest
-      }
+      headers: objtest
+    }
     )
   }
 }

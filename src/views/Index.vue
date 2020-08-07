@@ -142,7 +142,7 @@
             if (item.key === 'DateTime' && this.$utils.dayjs(res[item.key].val).isValid()) {
               res[item.key].val = this.$utils.dayjs(res[item.key].val).format('YYYY-MM-DD hh:mm:ss')
             }
-          } catch (e) { }
+          } catch (e) { /** */ }
           item.val = res[item.key] ? res[item.key].val : ''
         }
         return item
