@@ -60,7 +60,8 @@
     private index: number = 0 // 用于设置预览当前页
     private details: Type.Object = {} // 图片EXIF信息
     private topImg: string = '' // 置顶图片
-    private short: string = `?imageMogr2/thumbnail/${(window.screen.width / 2).toFixed(0)}x/blur/1x0/quality/85|watermark/2/text/U2hhd25QaGFuZw==/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzMzMw==/dissolve/89/gravity/SouthEast/dx/7/dy/7`
+    private orient: string = '?imageMogr2/auto-orient'
+    private short: string = `?imageMogr2/auto-orient/thumbnail/${(window.screen.width / 2).toFixed(0)}x/blur/1x0/quality/85|watermark/2/text/U2hhd25QaGFuZw==/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzMzMw==/dissolve/89/gravity/SouthEast/dx/7/dy/7`
 
     public get windowWidth(): string | number {
       return this.$getters.windowWidth
@@ -122,12 +123,12 @@
     private async preview(date: string, index: number) {
       this.visiable = 'hideSide'
       this.images = this.imgList[date].map((item: Type.Object) => {
-        return item.url
+        return item.url + this.orient
       })
       this.index = index
       this.show = true
 
-      const res = await this.$ajax.qn.getExif(this.images[index])
+      const res = await this.$ajax.qn.getExif(this.images[index].split('?')[0])
       const transField = TRANS_FIELD.map((Item: any) => {
         const item = Object.assign({}, Item)
         if (item.val) {
