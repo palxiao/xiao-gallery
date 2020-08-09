@@ -2,7 +2,7 @@ const GROUP_LEVEL: Type.Object = {
   topic: 4,
   year: 3,
   month: 2,
-  time: 1
+  time: 1,
 }
 
 const TRANS_FIELD: Type.Object = [
@@ -36,5 +36,8 @@ const TRANS_FIELD: Type.Object = [
 ]
 
 const freezeObject: Type.Object = {} // 不参与渲染的冻结变量
+
+export const widthws3 = (window.screen.width / 3).toFixed(0)
+export const widthws2 = (window.screen.width / 2).toFixed(0)
 
 export { TRANS_FIELD, GROUP_LEVEL, freezeObject }

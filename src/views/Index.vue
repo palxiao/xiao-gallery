@@ -37,11 +37,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import VueBase from '@/vueBase'
 import { ImagePreview, Divider } from 'vant'
-import {
-  TRANS_FIELD,
-  GROUP_LEVEL,
-  freezeObject,
-} from '@/assets/data/constantParams'
+import { TRANS_FIELD, GROUP_LEVEL, freezeObject, widthws2 } from '@/assets/data/constantParams'
 import Lock from '@/components/Lock.vue'
 import Side from '@/components/Side.vue'
 import str2array from '@/utils/widget/str2array'
@@ -67,11 +63,7 @@ export default class Index extends VueBase {
   private details: Type.Object = {} // 图片EXIF信息
   private topImg: string = '' // 置顶图片
   private orient: string = '?imageMogr2/auto-orient'
-  private short: string = `?imageMogr2/auto-orient/thumbnail/${(
-    window.screen.width / 2
-  ).toFixed(
-    0
-  )}x/blur/1x0/quality/85|watermark/2/text/U2hhd25QaGFuZw==/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzMzMw==/dissolve/89/gravity/SouthEast/dx/7/dy/7`
+  private short: string = `?imageMogr2/auto-orient/thumbnail/${widthws2}x/blur/1x0/quality/85|watermark/2/text/U2hhd25QaGFuZw==/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzMzMw==/dissolve/89/gravity/SouthEast/dx/7/dy/7`
   private scrollTop: number = 0
 
   public get windowWidth(): string | number {
@@ -79,7 +71,8 @@ export default class Index extends VueBase {
   }
 
   private async created() {
-    const res = await this.$ajax.qn.getList({ bucket: 'my-ablum', limit: 999 })
+    const res = await this.$ajax.qn.getList({ bucket: 'my-ablum', limit: 9999 })
+    this.$store.commit('setImgsLength', res.length)
     this.imgList = this.assembly(res)
     freezeObject.allImgList = this.imgList
     freezeObject.topicImgList = this.assembly(res, 'topic')
@@ -89,9 +82,7 @@ export default class Index extends VueBase {
   }
   private async mounted() {
     await this.$nextTick()
-    this.topImg = JSON.parse(localStorage.getItem('top_pic') + '')[
-      localStorage.getItem('top_pic-count') || 0
-    ]
+    this.topImg = JSON.parse(localStorage.getItem('top_pic') + '')[localStorage.getItem('top_pic-count') || 0]
     // 阻止返回键
     window.history.pushState(null, '', document.URL)
     window.addEventListener('popstate', this.onBrowserBack, false)
@@ -150,10 +141,7 @@ export default class Index extends VueBase {
     this.preview('', 0)
   }
   private async preview(date: string, index: number) {
-    this.scrollTop =
-      document.documentElement.scrollTop ||
-      window.pageYOffset ||
-      document.body.scrollTop
+    this.scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
 
     this.visiable = 'hideSide'
     if (date) {
@@ -176,7 +164,7 @@ export default class Index extends VueBase {
   }
   /** END */
   /** EXIF显示相关 */
-   private async loadEXIF(index: number) {
+  private async loadEXIF(index: number) {
     const res = await this.$ajax.qn.getExif(this.images[index].split('?')[0])
     const transField = TRANS_FIELD.map((Item: any) => {
       const item = Object.assign({}, Item)
@@ -188,16 +176,20 @@ export default class Index extends VueBase {
   private makingEXIF(item: any, res: any) {
     const kv = str2array(item.val)
     let val = item.val
-    const is = val && kv.keys.forEach((key: string, index: number) => {
-      try {
-        val = val.toString().replace(kv.values[index], res[key].val)
-      } catch (e) { val = '' }
-    })
+    const is =
+      val &&
+      kv.keys.forEach((key: string, index: number) => {
+        try {
+          val = val.toString().replace(kv.values[index], res[key].val)
+        } catch (e) {
+          val = ''
+        }
+      })
     const dayjs = this.$utils.dayjs
     if (res[item.key] && dayjs(res[item.key].val).isValid()) {
       try {
         res[item.key].val = dayjs(res[item.key].val).format('YYYY-MM-DD hh:mm:ss')
-      } catch (e) { }
+      } catch (e) {}
     }
     return val ? val.replace(' sec.', '') : res[item.key] ? res[item.key].val : ''
   }

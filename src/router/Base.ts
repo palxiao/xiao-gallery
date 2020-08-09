@@ -2,10 +2,10 @@ export default [
     {
         path: '/',
         name: 'main',
-        redirect: 'home',
+        redirect: '/',
         component: () => import('@/views/Ready.vue'),
         children: [{
-            path: '/home',
+            path: '/:albumId?',
             component: () => import(/* webpackChunkName: 'base' */ '@/views/Index.vue')
         }]
     }

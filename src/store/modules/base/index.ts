@@ -11,7 +11,8 @@ const all = {
     online: true, // 登录状态，
     user: {}, // 储存用户信息
     windowHeight: document.documentElement.clientHeight || document.body.clientHeight,
-    windowWidth: window.screen.width
+    windowWidth: window.screen.width,
+    imgsLength: 0
   },
   getters: {
     windowHeight: (state: Type.Object) => {
@@ -25,6 +26,9 @@ const all = {
     },
     user: (state: Type.Object) => {
       return state.user
+    },
+    imgsLength: (state: any) => {
+      return state.imgsLength
     }
   },
   mutations: {

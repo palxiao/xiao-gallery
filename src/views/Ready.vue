@@ -28,6 +28,8 @@
     private progress: number = 0
 
     private async mounted() {
+      console.log(this.$route.params.albumId);
+      
       await this.$nextTick()
       const short: string = `?imageMogr2/thumbnail/${window.screen.width}x/blur/1x0/quality/95`
       let res = await this.$ajax.qn.getList({ bucket: 'my-ablum', prefix: 'Top' })

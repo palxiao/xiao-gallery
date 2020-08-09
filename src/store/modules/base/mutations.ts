@@ -25,5 +25,8 @@ export default {
         // state.user.name = name;
         // state.user = Object.assign({}, state.user)
         // localStorage.setItem('username', name);
+    },
+    setImgsLength(state: Type.Object, long: string|number) {
+        state.imgsLength = long;
     }
 }
