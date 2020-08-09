@@ -92,9 +92,8 @@ export default class Index extends VueBase {
     this.topImg = JSON.parse(localStorage.getItem('top_pic') + '')[
       localStorage.getItem('top_pic-count') || 0
     ]
-
+    // 阻止返回键
     window.history.pushState(null, '', document.URL)
-    // 给window添加一个popstate事件，拦截返回键，执行this.onBrowserBack事件，addEventListener需要指向一个方法
     window.addEventListener('popstate', this.onBrowserBack, false)
   }
   private onBrowserBack() {
