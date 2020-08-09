@@ -131,7 +131,6 @@ export default class Index extends VueBase {
       result[item[0][key]] = item
     }
     const check = result.undefined && delete result.undefined
-    // const newResult = JSON.parse(JSON.stringify(result))
     return this.$utils.GroupArray.sortObj(result)
   }
   private parsing(item: string) {
