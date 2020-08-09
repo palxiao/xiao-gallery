@@ -42,7 +42,7 @@
       })
       setTimeout(() => {
         this.done = true
-      }, 300)
+      }, 100)
 
       // this.$commit('loading', '拼命加载ing..');
       // this.done = true
