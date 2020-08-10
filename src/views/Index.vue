@@ -125,7 +125,7 @@ export default class Index extends VueBase {
     return this.$utils.GroupArray.sortObj(result)
   }
   private parsing(item: string) {
-    const params = item.split('.')[0].split('/')
+    const params = item ? item.split('.')[0].split('/') : []
     const dateTime = +params[params.length - 1]
     return { params, dateTime: +params[params.length - 1] }
   }
@@ -165,6 +165,7 @@ export default class Index extends VueBase {
   /** END */
   /** EXIF显示相关 */
   private async loadEXIF(index: number) {
+    if (!this.images[index]) { return }
     const res = await this.$ajax.qn.getExif(this.images[index].split('?')[0])
     const transField = TRANS_FIELD.map((Item: any) => {
       const item = Object.assign({}, Item)
@@ -186,7 +187,7 @@ export default class Index extends VueBase {
         }
       })
     const dayjs = this.$utils.dayjs
-    if (res[item.key] && dayjs(res[item.key].val).isValid()) {
+    if (item.key === 'DateTime' && res[item.key] && dayjs(res[item.key].val).isValid()) {
       try {
         res[item.key].val = dayjs(res[item.key].val).format('YYYY-MM-DD hh:mm:ss')
       } catch (e) {}
