@@ -11,57 +11,59 @@
   </div>
 </template>
 <script lang="ts">
-  import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator'
-  import VueBase from '@/vueBase'
-  // import { mapMutations } from 'vuex'
-  import { Image as VanImage, Lazyload, Loading } from 'vant'
-  import Preload from '@/utils/widget/preload'
-  Vue.use(VanImage).use(Loading).use(Lazyload, {
+import { Component, Prop, Vue, Emit, Watch } from 'vue-property-decorator'
+import VueBase from '@/vueBase'
+// import { mapMutations } from 'vuex'
+import { Image as VanImage, Lazyload, Loading } from 'vant'
+import Preload from '@/utils/widget/preload'
+Vue.use(VanImage)
+  .use(Loading)
+  .use(Lazyload, {
     /** loading: './favicon.ico', */
   })
 
-  @Component({
-    components: {},
-  })
-  export default class Ready extends VueBase {
-    private done: boolean = false
-    private progress: number = 0
+@Component({
+  components: {},
+})
+export default class Ready extends VueBase {
+  private done: boolean = false
+  private progress: number = 0
 
-    private async mounted() {
-      const { albumId, bucket } = this.$route.params
-      await this.$nextTick()
-      const short: string = `?imageMogr2/thumbnail/${window.screen.width}x/blur/1x0/quality/95`
-      let res = await this.$ajax.qn.getList({id: albumId, bucket, prefix: 'Top' })
-      res = res.map((url: string) => {
-        return this.$utils.config.IMG_URL + url + short
-      })
-      localStorage.setItem('top_pic', JSON.stringify(res))
+  private async mounted() {
+    const { albumId, bucket } = this.$route.params
+    await this.$nextTick()
+    const short: string = `?imageMogr2/thumbnail/${window.screen.width}x/blur/1x0/quality/95`
+    let res = await this.$ajax.qn.getList({ id: albumId, bucket, prefix: 'Top' })
+    res = res.data.map((url: string) => {
+      return res.domain + url + short
+    })
+    localStorage.setItem('top_pic', JSON.stringify(res))
 
-      const preload = new Preload(res)
-      const preDone = await preload.imgs((progress: any) => {
-        this.progress = +progress.toFixed(0)
-      })
-      setTimeout(() => {
-        this.done = true
-      }, 100)
+    const preload = new Preload(res)
+    const preDone = await preload.imgs((progress: any) => {
+      this.progress = +progress.toFixed(0)
+    })
+    setTimeout(() => {
+      this.done = true
+    }, 100)
 
-      // this.$commit('loading', '拼命加载ing..');
-      // this.done = true
-      // this.$commit('loading', false);
-    }
+    // this.$commit('loading', '拼命加载ing..');
+    // this.done = true
+    // this.$commit('loading', false);
   }
+}
 </script>
 <style scoped lang="less">
-  .loading-wrap {
-    height: 100vh;
-    .pipe {
-      width: 90%;
-      height: 4px;
-      .progress {
-        background: #999;
-        text-align: right;
-        height: 100%;
-      }
+.loading-wrap {
+  height: 100vh;
+  .pipe {
+    width: 90%;
+    height: 4px;
+    .progress {
+      background: #999;
+      text-align: right;
+      height: 100%;
     }
   }
+}
 </style>

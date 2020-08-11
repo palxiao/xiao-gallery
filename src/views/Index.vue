@@ -72,7 +72,9 @@ export default class Index extends VueBase {
 
   private async created() {
     const { albumId, bucket } = this.$route.params
-    const res = await this.$ajax.qn.getList({ id: albumId, bucket, limit: 9999 })
+    const { data: res, domain } = await this.$ajax.qn.getList({ id: albumId, bucket, limit: 9999 })
+    this.$utils.config.IMG_URL = domain
+
     this.$store.commit('setImgsLength', res.length)
     this.imgList = this.assembly(res)
     freezeObject.allImgList = this.imgList
@@ -166,7 +168,9 @@ export default class Index extends VueBase {
   /** END */
   /** EXIF显示相关 */
   private async loadEXIF(index: number) {
-    if (!this.images[index]) { return }
+    if (!this.images[index]) {
+      return
+    }
     const res = await this.$ajax.qn.getExif(this.images[index].split('?')[0])
     const transField = TRANS_FIELD.map((Item: any) => {
       const item = Object.assign({}, Item)
