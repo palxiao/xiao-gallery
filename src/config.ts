@@ -1,7 +1,7 @@
 /**
  *   0 本地服务器   1 线上服务器
  */
-const environment: number = 0;
+const environment: number = 1;
 
 let apiUrl!: string;
 if (environment === 0) {
