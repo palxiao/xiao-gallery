@@ -71,7 +71,8 @@ export default class Index extends VueBase {
   }
 
   private async created() {
-    const res = await this.$ajax.qn.getList({ bucket: 'my-ablum', limit: 9999 })
+    const { albumId, bucket } = this.$route.params
+    const res = await this.$ajax.qn.getList({ id: albumId, bucket, limit: 9999 })
     this.$store.commit('setImgsLength', res.length)
     this.imgList = this.assembly(res)
     freezeObject.allImgList = this.imgList

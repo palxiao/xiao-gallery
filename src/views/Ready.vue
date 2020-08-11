@@ -28,10 +28,10 @@
     private progress: number = 0
 
     private async mounted() {
-      console.log('读取相册', this.$route.params.albumId);
+      const { albumId, bucket } = this.$route.params
       await this.$nextTick()
       const short: string = `?imageMogr2/thumbnail/${window.screen.width}x/blur/1x0/quality/95`
-      let res = await this.$ajax.qn.getList({ bucket: 'my-ablum', prefix: 'Top' })
+      let res = await this.$ajax.qn.getList({id: albumId, bucket, prefix: 'Top' })
       res = res.map((url: string) => {
         return this.$utils.config.IMG_URL + url + short
       })

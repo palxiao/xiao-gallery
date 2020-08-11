@@ -5,7 +5,7 @@ export default [
         redirect: '/',
         component: () => import('@/views/Ready.vue'),
         children: [{
-            path: '/:albumId?',
+            path: '/:albumId?/:bucket?',
             component: () => import(/* webpackChunkName: 'base' */ '@/views/Index.vue')
         }]
     }
