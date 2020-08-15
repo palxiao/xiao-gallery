@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div v-show="!hide" @click="show = true" class="picon_zhankai-btn">
+    <div v-show="!hide" @click="show = true" class="flex-layout-center icon_btn icon_btn-zhankai">
       <i class="a-icon picon_zhankai"></i>
     </div>
+    <div v-show="!hide" @click="openPlayer" class="flex-layout-center icon_btn animate__animated" :class="effect?effect:''"><i class="a-icon picon_music"></i></div>
+
     <van-popup v-model="show" closeable position="right" :style="{ height: '100%', width: '40%' }">
       <div class="class_wrap">
         <div class="title">共 {{long}} 收录</div>
@@ -46,6 +48,7 @@ export default class Name extends VueBase {
   private icons: string[] = ['topic', 'year', 'month']
   private iconIndex: number = 0
   private short: string = `?imageMogr2/thumbnail/${widthws3}x/blur/1x0/quality/75`
+  private effect: string = ''
 
   get long() {
     return this.$getters.imgsLength
@@ -66,6 +69,10 @@ export default class Name extends VueBase {
     }, 10)
     this.iconIndex = index
     this.$emit('choose', this.icons[index])
+  }
+  private openPlayer() {
+    this.$emit('player')
+    this.effect = 'animate__fadeOutUp'
   }
 
   // @Emit('change')
@@ -106,20 +113,31 @@ export default class Name extends VueBase {
     color: #ffffff;
   }
 }
-.picon_zhankai-btn {
-  bottom: 15%;
-  transform: rotate(180deg);
+
+.icon_btn {
+  bottom: 4vw;
   position: fixed;
   background: rgba(255, 255, 255, 0.7);
   right: 20px;
   padding: 10px;
   border-radius: 50%;
   box-shadow: 0 0 0.7rem #999999;
+  width: 44px;
+  height: 44px;
+  &-zhankai {
+    bottom: 24vw;
+    transform: rotate(180deg);
+  }
+  .picon_music {
+    color: #222;
+    font-size: 22px;
+  }
+  .picon_zhankai {
+    color: #222;
+    font-size: 18px;
+  }
 }
-.picon_zhankai {
-  color: #111;
-  font-size: 18px;
-}
+
 .select_type {
   padding-top: 24px;
   margin: 0 10%;

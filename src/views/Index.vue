@@ -29,7 +29,8 @@
     </div>
 
     <lock v-model="visiable" />
-    <side :hide="visiable === 'hideSide'" :data="sideList" @select="sideSelect" @choose="chooseModel" />
+    <side :hide="visiable === 'hideSide'" :data="sideList" @player="openPlayer" @select="sideSelect" @choose="chooseModel" />
+    <player v-show="visiable !== 'hideSide'" v-if="palyerShow" />
   </div>
 </template>
 
@@ -39,7 +40,7 @@ import VueBase from '@/vueBase'
 import { ImagePreview, Divider } from 'vant'
 import { TRANS_FIELD, GROUP_LEVEL, freezeObject, widthws2 } from '@/assets/data/constantParams'
 import Lock from '@/components/Lock.vue'
-import Side from '@/components/Side.vue'
+// import Side from '@/components/Side.vue'
 import str2array from '@/utils/widget/str2array'
 
 @Component({
@@ -47,13 +48,15 @@ import str2array from '@/utils/widget/str2array'
     [ImagePreview.Component.name]: ImagePreview.Component,
     [Divider.name]: Divider,
     Lock,
-    Side,
+    Side: () => import('@/components/Side.vue'),
+    Player: () => import('@/components/Player.vue')
   },
 })
 export default class Index extends VueBase {
   // public constructor() {
   //   super();
   // }
+  private palyerShow: boolean = false
   private visiable: string = ''
   private imgList: Type.Object = {} // 图片列表
   private sideList: Type.Object = {} // 侧边列表
@@ -63,7 +66,7 @@ export default class Index extends VueBase {
   private details: Type.Object = {} // 图片EXIF信息
   private topImg: string = '' // 置顶图片
   private orient: string = '?imageMogr2/auto-orient'
-  private short: string = `?imageMogr2/auto-orient/thumbnail/${widthws2}x/blur/1x0/quality/85|watermark/2/text/U2hhd25QaGFuZw==/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzMzMw==/dissolve/89/gravity/SouthEast/dx/7/dy/7`
+  private short: string = `?imageMogr2/auto-orient/thumbnail/${widthws2}x/blur/1x0/quality/85`
   private scrollTop: number = 0
 
   public get windowWidth(): string | number {
@@ -212,6 +215,9 @@ export default class Index extends VueBase {
   private chooseModel(type: string) {
     this.sideList = freezeObject[`${type}ImgList`]
   }
+  private openPlayer() {
+    this.palyerShow = true
+  }
 
   private destroyed() {
     // 当页面销毁必须要移除这个事件，vue不刷新页面，不移除会重复执行这个事件
@@ -234,6 +240,7 @@ export default class Index extends VueBase {
 .home {
   overflow: -moz-scrollbars-none;
   -ms-overflow-style: none;
+  padding-bottom: 18.6vw;
 }
 
 .take_photo {
