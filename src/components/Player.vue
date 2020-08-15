@@ -26,8 +26,6 @@ export default class Name extends VueBase {
       ids.push(x.id)
       listObj[x.id] = { name: x.name, artist: x.ar[0] ? x.ar[0].name : '', cover: x.al.picUrl }
     }
-    console.log(resList);
-    
     let audio = await this.$ajax.music.getUrl({ id: ids + '' })
     audio = audio.data.map((x: any) => {
       return Object.assign({ url: x.url }, listObj[x.id])
@@ -48,5 +46,4 @@ export default class Name extends VueBase {
 }
 </script>
 <style scoped lang='less'>
-
 </style>
