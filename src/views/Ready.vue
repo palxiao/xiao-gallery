@@ -19,7 +19,7 @@ import Preload from '@/utils/widget/preload'
 Vue.use(VanImage)
   .use(Loading)
   .use(Lazyload, {
-    /** loading: './favicon.ico', */
+    loading: './favicon.ico',
   })
 
 @Component({

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div v-show="!hide" @click="toShare" style="bottom: 44vw;" class="flex-layout-center icon_btn"><i class="a-icon picon_share"></i></div>
     <div v-show="!hide" @click="show = true" class="flex-layout-center icon_btn icon_btn-zhankai">
       <i class="a-icon picon_zhankai"></i>
     </div>
@@ -74,6 +75,9 @@ export default class Name extends VueBase {
     this.$emit('player')
     this.effect = 'animate__fadeOutUp'
   }
+  private toShare() {
+    this.$emit('share')
+  }
 
   // @Emit('change')
   // private change(e: MouseEvent) {}
@@ -128,13 +132,11 @@ export default class Name extends VueBase {
     bottom: 24vw;
     transform: rotate(180deg);
   }
-  .picon_music {
-    color: #222;
+  .a-icon {
     font-size: 22px;
   }
   .picon_zhankai {
-    color: #222;
-    font-size: 18px;
+    font-size: 20px;
   }
 }
 

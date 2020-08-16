@@ -12,7 +12,8 @@ const all = {
     user: {}, // 储存用户信息
     windowHeight: document.documentElement.clientHeight || document.body.clientHeight,
     windowWidth: window.screen.width,
-    imgsLength: 0
+    imgsLength: 0,
+    shareEl: null
   },
   getters: {
     windowHeight: (state: Type.Object) => {
@@ -29,6 +30,9 @@ const all = {
     },
     imgsLength: (state: any) => {
       return state.imgsLength
+    },
+    shareEl: (state: any) => {
+      return state.shareEl
     }
   },
   mutations: {

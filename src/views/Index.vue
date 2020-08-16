@@ -8,11 +8,11 @@
       <div v-for="(imgs, date, key) in imgList" :key="key">
         <van-divider content-position="left">{{ date }}</van-divider>
         <div class="box-wrapper">
-          <van-image @click="preview(date, index)" :src="img.url + short" v-for="(img, index) in imgs" :key="index" lazy-load class="box spe">
+          <van-image @click="preview(date, index)" :src="img.url + short" v-for="(img, index) in imgs" :key="index" lazy-load class="box" :class="isIOS?'spe':'spe spe_f'">
             <template v-slot:loading>
               <van-loading /> </template>
           </van-image>
-          <!-- <img @click="preview(date, index)" v-for="(img, index) in imgs" :key="index" v-lazy="img.url+short" class="box spe" /> -->
+          <!-- <img @click="preview(date, index)" v-for="(img, index) in imgs" :key="index" v-lazy="img.url+short" class="box" :class="isIOS?'spe':'spe spe_f'" /> -->
         </div>
       </div>
 
@@ -29,8 +29,9 @@
     </div>
 
     <lock v-model="visiable" />
-    <side :hide="visiable === 'hideSide'" :data="sideList" @player="openPlayer" @select="sideSelect" @choose="chooseModel" />
-    <player v-show="visiable !== 'hideSide'" v-if="palyerShow" />
+    <side v-if="sideShow" :hide="visiable === 'hideSide'" :data="sideList" @player="openPlayer" @select="sideSelect" @choose="chooseModel" @share="visiable='showShare'" />
+    <player v-if="palyerShow" v-show="visiable !== 'hideSide'" />
+    <share v-model="visiable" v-if="shareShow" />
   </div>
 </template>
 
@@ -49,7 +50,8 @@ import str2array from '@/utils/widget/str2array'
     [Divider.name]: Divider,
     Lock,
     Side: () => import('@/components/Side.vue'),
-    Player: () => import('@/components/Player.vue')
+    Player: () => import('@/components/Player.vue'),
+    Share: () => import('@/components/Share.vue'),
   },
 })
 export default class Index extends VueBase {
@@ -57,6 +59,8 @@ export default class Index extends VueBase {
   //   super();
   // }
   private palyerShow: boolean = false
+  private sideShow: boolean = false
+  private shareShow: boolean = false
   private visiable: string = ''
   private imgList: Type.Object = {} // 图片列表
   private sideList: Type.Object = {} // 侧边列表
@@ -66,11 +70,14 @@ export default class Index extends VueBase {
   private details: Type.Object = {} // 图片EXIF信息
   private topImg: string = '' // 置顶图片
   private orient: string = '?imageMogr2/auto-orient'
-  private short: string = `?imageMogr2/auto-orient/thumbnail/${widthws2}x/blur/1x0/quality/85`
+  private short: string = `?imageMogr2/auto-orient/thumbnail/${widthws2}x/blur/1x0/quality/95`
   private scrollTop: number = 0
 
   public get windowWidth(): string | number {
     return this.$getters.windowWidth
+  }
+  public get isIOS(): boolean {
+    return this.$utils.isIOS()
   }
 
   private async created() {
@@ -92,6 +99,10 @@ export default class Index extends VueBase {
     // 阻止返回键
     window.history.pushState(null, '', document.URL)
     window.addEventListener('popstate', this.onBrowserBack, false)
+    setTimeout(() => {
+      this.shareShow = true
+      this.sideShow = true
+    }, 100)
   }
   private onBrowserBack() {
     setTimeout(() => {
@@ -272,26 +283,30 @@ export default class Index extends VueBase {
   -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
   break-inside: avoid;
-  // border: 1px solid #000;
-  // background: #909090;
+  box-sizing: border-box;
 }
 .spe {
-  float: left;
+  vertical-align: top;
   margin-bottom: 1rem;
   width: 100%;
   height: auto;
   overflow: hidden;
   // box-shadow: 0 0 0.7rem #777777;
   border-radius: 4px;
+  &_f {
+    float: left;
+  }
 }
 .box-wrapper {
-  margin: 1rem;
+  width: 100vw;
+  padding: 1rem;
   -moz-column-count: 3;
   -webkit-column-count: 3;
   column-count: 3;
   -moz-column-gap: 1rem;
   -webkit-column-gap: 1rem;
   column-gap: 1rem;
+  column-width: 10px;
 }
 @media (max-width: 1280px) {
   .box-wrapper {

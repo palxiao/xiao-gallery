@@ -28,5 +28,8 @@ export default {
     },
     setImgsLength(state: Type.Object, long: string|number) {
         state.imgsLength = long;
+    },
+    setShareEl(state: Type.Object, document: any) {
+        state.shareEl = document;
     }
 }
