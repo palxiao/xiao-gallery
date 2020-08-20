@@ -11,13 +11,12 @@ export default class PreLoad {
                 if (this.i < this.arr.length) {
                     const img = new Image()
                     img.src = this.arr[this.i]
-                    // console.log(`Load ${this.arr[this.i]}`);
-                    cb(((this.i + 1) / this.arr.length) * 100) // 进度反馈
                     if (img.complete) {
                         this.i++
                         work()
                     } else {
                         img.onload = () => {
+                            cb(((this.i + 1) / this.arr.length) * 100) // 进度反馈
                             this.i++
                             work()
                             img.onload = null

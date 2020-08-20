@@ -32,15 +32,19 @@ export default class Ready extends VueBase {
   private async mounted() {
     const { albumId, bucket } = this.$route.params
     await this.$nextTick()
-    const short: string = `?imageMogr2/thumbnail/${window.screen.width}x/blur/1x0/quality/95`
+    const short: string = `?imageMogr2/thumbnail/${window.screen.width * 2}x/blur/1x0/quality/95`
     let res = await this.$ajax.qn.getList({ id: albumId, bucket, prefix: 'Top' })
     res = res.data.map((url: string) => {
       return res.domain + url + short
     })
     localStorage.setItem('top_pic', JSON.stringify(res))
+    // 随机抽取一张封面图
+    // const topImgs = JSON.parse(localStorage.getItem('top_pic') + '')
+    const count = this.$utils.random(1, res.length) - 1
+    localStorage.setItem('top_pic-count', count + '')
 
-    const preload = new Preload(res)
-    const preDone = await preload.imgs((progress: any) => {
+    const preload = new Preload([res[count]])
+    const preDone = await preload.imgs((progress: number) => {
       this.progress = +progress.toFixed(0)
     })
     setTimeout(() => {

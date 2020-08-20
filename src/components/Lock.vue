@@ -31,9 +31,7 @@ export default class Name extends VueBase {
   // get computed() { return 'computed' }
   private created() {
     const topImgs = JSON.parse(localStorage.getItem('top_pic') + '')
-    const count = this.$utils.random(1, topImgs.length) - 1
-    localStorage.setItem('top_pic-count', count + '')
-    this.topImg = topImgs[count]
+    this.topImg = topImgs[localStorage.getItem('top_pic-count') || 0]
   }
   private async mounted() {
     await this.$nextTick()
@@ -85,6 +83,7 @@ export default class Name extends VueBase {
       position: absolute;
       top: 12vh;
       .sub_date {
+        font-weight: bolder;
         font-size: 15px;
         padding: 4px 0;
       }
