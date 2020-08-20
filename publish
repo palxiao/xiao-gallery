@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+
+yarn
+yarn build
+git add .
+git commit -m 'push'
+git push origin publish
+
+echo -e "\n发布成功\n"
+exit
