@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <van-image-preview v-model="show" :images="images" max-zoom="12" @close="previewClose" @change="previewChange" class-name="image-preview-view" :show-index="true" :startPosition="index">
+      <van-image-preview v-model="show" :loop="false" :images="images" max-zoom="12" @close="previewClose" @change="previewChange" class-name="image-preview-view" :show-index="true" :startPosition="index">
         <template v-slot:cover>
           <div class="pic_detail-wrap flex-layout">
             <div class="param flex-layout" v-show="detail.val" v-for="(detail, index) in details" :key="index">

@@ -75,6 +75,7 @@ export default class Name extends VueBase {
     width: 100%;
     height: 100vh;
     .time {
+      text-shadow:1px 1px 7px #777777;
       color: #fff;
       font-weight: 100;
       font-size: 10rem;
@@ -92,7 +93,7 @@ export default class Name extends VueBase {
       animation: bulingbuling 2.7s infinite;
       text-align: center;
       margin-top: 77vh;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.87);
       font-size: 8.7rem;
     }
   }
