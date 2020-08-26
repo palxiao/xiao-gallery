@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="!hide" @click="toShare" style="bottom: 44vw;" class="flex-layout-center icon_btn"><i class="a-icon picon_share"></i></div>
+    <div v-show="!hide" @click="toShare" style="bottom: 178px;" class="flex-layout-center icon_btn"><i class="a-icon picon_share"></i></div>
     <div v-show="!hide" @click="show = true" class="flex-layout-center icon_btn icon_btn-zhankai">
       <i class="a-icon picon_zhankai"></i>
     </div>
@@ -119,24 +119,24 @@ export default class Name extends VueBase {
 }
 
 .icon_btn {
-  bottom: 4vw;
+  bottom: 30PX;
   position: fixed;
   background: rgba(255, 255, 255, 0.7);
-  right: 20px;
-  padding: 10px;
+  right: 20Px;
+  padding: 10Px;
   border-radius: 50%;
   box-shadow: 0 0 0.7rem #999999;
-  width: 44px;
-  height: 44px;
+  width: 44PX;
+  height: 44PX;
   &-zhankai {
-    bottom: 24vw;
+    bottom: 104Px;
     transform: rotate(180deg);
   }
   .a-icon {
-    font-size: 22px;
+    font-size: 22Px;
   }
   .picon_zhankai {
-    font-size: 20px;
+    font-size: 20Px;
   }
 }
 
