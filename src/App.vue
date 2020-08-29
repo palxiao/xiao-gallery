@@ -1,8 +1,6 @@
 <!--  -->
 <template>
-  <!-- <div class=''> -->
   <router-view></router-view>
-  <!-- </div> -->
 </template>
 <script lang='ts'>
 import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -18,15 +16,6 @@ export default class AppMain extends VueBase {
     await this.$nextTick();
     console.log('welcome');
   }
-  // 监听登录状态
-  // @Watch('online', { immediate: true, deep: true })
-  // private onOnlineStatusChanged(val: string) {
-  //   if (!val) {
-  //     setTimeout(() => {
-  //       this.$router.push('/login');
-  //     }, 300);
-  //   }
-  // }
 }
 </script>
 <style scoped lang='less'>
