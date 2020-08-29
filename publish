@@ -8,5 +8,7 @@ git add .
 git commit -m 'push'
 git push origin publish
 
+git checkout master
+
 echo -e "\n发布成功\n"
 exit
