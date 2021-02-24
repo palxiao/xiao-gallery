@@ -18,7 +18,7 @@
             <template v-slot:loading>
               <van-loading /> </template>
           </van-image>
-          <div class="class_box-title flex-layout-center line-clamp-1">{{ type }}</div>
+          <div class="class_box-title flex-layout-center ">{{ type }}</div> <!-- line-clamp-1 -->
         </div>
       </div>
     </van-popup>

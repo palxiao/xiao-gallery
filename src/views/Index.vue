@@ -9,8 +9,7 @@
         <van-divider content-position="left">{{ date }}</van-divider>
         <div class="box-wrapper">
           <van-image @click="preview(date, index)" :src="img.url + short" v-for="(img, index) in imgs" :key="index" lazy-load class="box" :class="isIOS?'spe':'spe spe_f'">
-            <template v-slot:loading>
-              <van-loading /> </template>
+            <template v-slot:loading> <van-loading /> </template>
           </van-image>
           <!-- <img @click="preview(date, index)" v-for="(img, index) in imgs" :key="index" v-lazy="img.url+short" class="box" :class="isIOS?'spe':'spe spe_f'" /> -->
         </div>
